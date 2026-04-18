@@ -576,7 +576,7 @@ const monthLabel=k=>{const[y,m]=k.split('-M');return['Jan','Fev','Mar','Abr','Ma
 const quarterLabel=k=>{const[y,q]=k.split('-');return`${q} de ${y}`};
 const shortDate=iso=>new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
 const fullDate=iso=>new Date(iso).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
-const scoreColor=s=>s>=80?'#00E2B7':s>=60?'#00ABFB':'#ff4466';
+const scoreColor=s=>s>=70?'#00E2B7':s>=50?'#00ABFB':s>=30?'#BC4AFF':'#ff4466';
 
 // ─── TABS ─────────────────────────────────────────────────
 function showTab(tab,el){
@@ -992,8 +992,8 @@ function openProfileDetail(id){
   });
 
   // Auto summary
-  const strong=Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak=Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const strong=Object.entries(critAvg).filter(([,v])=>v>=70).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const weak=Object.entries(critAvg).filter(([,v])=>v<30).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
   let autoSummary=recs.length>=2
     ?`${p.name} tem ${recs.length} avaliações com média de ${avg}/100. ${strong.length?'Consistentemente forte em '+strong.join(' e ')+'. ':''} ${weak.length?'Áreas que merecem atenção: '+weak.join(' e ')+'.':''} ${(p.feedbacks||[]).length?`Já registrou ${p.feedbacks.length} resposta${p.feedbacks.length>1?'s':''} de feedback, o que demonstra abertura ao diálogo.`:''}`
     :`Ainda poucas avaliações para ${p.name}. Continue o acompanhamento semanal para construir um perfil mais completo.`;
@@ -1107,18 +1107,20 @@ function togglePeriodSelect(){
 // ─── NARRATIVE REPORT (local) ────────────────────────────
 async function generateNarrativeText(personName, role, avgTotal, critAvg, positives, negatives, periodLabel, crit) {
   const t = Math.round(avgTotal);
-  const strong = Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak = Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const mid = Object.entries(critAvg).filter(([,v])=>v>=60&&v<75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const strong = Object.entries(critAvg).filter(([,v])=>v>=70).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const weak = Object.entries(critAvg).filter(([,v])=>v<30).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const mid = Object.entries(critAvg).filter(([,v])=>v>=30&&v<70).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
 
   let txt = '';
 
-  if(t >= 80) {
-    txt = `${personName} teve uma semana sólida — nota ${t}/100 que reflete consistência e comprometimento com o trabalho. `;
-  } else if(t >= 60) {
-    txt = `${personName} entregou uma semana razoável, com nota ${t}/100. Há espaço para crescimento, mas a base está lá. `;
+  if(t >= 70) {
+    txt = `${personName} teve uma semana muito boa — nota ${t}/100, o que já é excelente dentro da régua de avaliação. Consistência e comprometimento ficaram evidentes nas entregas. `;
+  } else if(t >= 50) {
+    txt = `${personName} teve uma semana em desenvolvimento, com nota ${t}/100. Está no caminho certo — há espaço para crescer, mas a base está sendo construída. `;
+  } else if(t >= 30) {
+    txt = `${personName} ficou abaixo do esperado esta semana, com nota ${t}/100. Alguns pontos merecem atenção e acompanhamento mais próximo nas próximas semanas. `;
   } else {
-    txt = `Foi uma semana desafiadora para ${personName}, com nota ${t}/100. Vale uma conversa direta sobre o que está acontecendo. `;
+    txt = `Foi uma semana crítica para ${personName}, com nota ${t}/100. Isso indica a necessidade de uma conversa direta e cuidadosa sobre o que está acontecendo. `;
   }
 
   if(strong.length) {
@@ -1198,9 +1200,10 @@ async function generateReport(){
       if(critAvg[c.id]==null)return;
       const v=Math.round(critAvg[c.id]);
       const s=v;
-      const text=s>=80?`${p.name} demonstra excelente desempenho aqui — é um ponto forte que reflete consistência e comprometimento com a qualidade.`
-        :s>=60?`Desempenho satisfatório, com margem para crescimento. Alguns padrões merecem atenção nas próximas semanas.`
-        :`Área que precisa de desenvolvimento. Os indicadores apontam para a necessidade de uma conversa direta e acompanhamento próximo.`;
+      const text=s>=70?`${p.name} está indo muito bem aqui — ponto forte que merece reconhecimento.`
+        :s>=50?`Em desenvolvimento, no caminho certo. Nada que preocupe, mas vale continuar de olho.`
+        :s>=30?`Abaixo do esperado. Merece acompanhamento mais próximo nas próximas semanas.`
+        :`Ponto crítico. Os indicadores aqui pedem uma conversa direta e atenção imediata.`;
       critHtml+=`<div class="crit-detail-card" style="border-color:${c.color}">
         <div class="crit-detail-header"><span class="crit-detail-name" style="color:${c.color}">${c.name}</span><span class="crit-detail-score" style="color:${c.color}">${v}/100</span></div>
         <div class="crit-detail-text">${text}</div>
@@ -1211,8 +1214,9 @@ async function generateReport(){
     const sugs=[];
     crit.forEach(c=>{
       const v=critAvg[c.id];if(v==null)return;
-      if(v<60)sugs.push(`Conversa direta sobre ${c.name} — os indicadores desta área estão abaixo do esperado e merecem atenção prioritária.`);
-      else if(v<75)sugs.push(`Continue acompanhando ${c.name} de perto — está em desenvolvimento e uma atenção consistente pode acelerar a evolução.`);
+      if(v<30)sugs.push(`${c.name} está em zona crítica (${Math.round(v)}/100) — uma conversa direta e cuidadosa é necessária.`);
+      else if(v<50)sugs.push(`${c.name} abaixo do esperado (${Math.round(v)}/100). Acompanhamento próximo nas próximas semanas.`);
+      else if(v<70)sugs.push(`${c.name} em desenvolvimento (${Math.round(v)}/100). No caminho certo, continue acompanhando.`);
     });
     if(!sugs.length)sugs.push(`${p.name} está com boa performance geral. Mantenha o acompanhamento e continue estimulando a autonomia e inovação.`);
 
