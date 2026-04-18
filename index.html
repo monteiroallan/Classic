@@ -203,19 +203,19 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .export-btn{width:100%;background:var(--s1);border:1.5px solid var(--a1);border-radius:var(--r);padding:14px;margin-top:16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--a1);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
 
 /* CARD SEMANAL */
-.weekly-card-preview{background:linear-gradient(135deg,var(--s1) 0%,rgba(117,21,255,0.15) 100%);border:1px solid rgba(117,21,255,0.3);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
-.weekly-card-preview::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(0,171,251,0.15),transparent 70%);border-radius:50%}
-.wc-emoji-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.wc-main-emoji{font-size:40px}
-.wc-context-emojis{display:flex;gap:6px;font-size:20px}
-.wc-score-badge{background:rgba(0,171,251,0.15);border:1px solid rgba(0,171,251,0.3);border-radius:8px;padding:4px 10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--a1);margin-left:auto}
-.wc-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px}
-.wc-period{font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'Syne',sans-serif}
-.wc-text{font-size:14px;color:#dde;line-height:1.8}
-.wc-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+
+
+
+
+
+
+
+
+
+
 .wc-loading .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--a1);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.share-btn{width:100%;background:var(--a2);color:white;border:none;border-radius:var(--r);padding:14px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+
 
 /* SETTINGS */
 .settings-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;transition:all 0.18s}
@@ -264,11 +264,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 /* AI LOADING */
-.ai-loading{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 20px;color:var(--muted);font-size:13px;text-align:center}
-.ai-loading .dots span{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--a1);animation:dotBounce 1.2s ease-in-out infinite}
-.ai-loading .dots span:nth-child(2){animation-delay:0.2s;background:var(--a2)}
-.ai-loading .dots span:nth-child(3){animation-delay:0.4s;background:var(--a3)}
-@keyframes dotBounce{0%,80%,100%{transform:scale(0.6);opacity:0.5}40%{transform:scale(1);opacity:1}}
+
+
+
+
+40%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
@@ -351,11 +351,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
     <!-- PERFIL DETALHE -->
     <div class="page" id="page-profile-detail">
       <div id="profileDetailContent"></div>
-    </div>
-
-    <!-- CARD SEMANAL -->
-    <div class="page" id="page-weekly-card">
-      <div id="weeklyCardContent"></div>
     </div>
 
     <!-- RELATÓRIO -->
@@ -1017,7 +1012,7 @@ function openProfileDetail(id){
     </div>
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <button onclick="editProfile('${id}')" style="flex:1;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:11px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer">Editar perfil</button>
-      <button onclick="openWeeklyCard('${id}')" style="flex:2;background:var(--a2);border:none;border-radius:var(--r);padding:11px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:white;cursor:pointer">✨ Card Semanal</button>
+      
       <button onclick="openDeleteProfile('${id}')" style="flex:1;background:var(--s1);border:1px solid rgba(255,68,102,0.3);border-radius:var(--r);padding:11px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#ff4466;cursor:pointer">Remover</button>
     </div>
     <div class="card" style="margin-bottom:14px">
@@ -1091,197 +1086,6 @@ function saveFeedback(){
   openProfileDetail(feedbackPersonId);showToast('✓ Resposta registrada');
 }
 
-// ─── WEEKLY CARD (AI) ─────────────────────────────────────
-async function openWeeklyCard(personId){
-  const profiles=getProfiles();const p=profiles.find(x=>x.id===personId);if(!p)return;
-  const crit=getCriteria();
-  const history=getHistory();
-  const occs=getOccs();
-  const week=getWeekKey(new Date());
-
-  // Get this week's data
-  const weekRecs=history.filter(r=>r.personId===personId&&r.week===week&&!r.noOcc);
-  const weekOccs=occs.filter(o=>o.personId===personId&&o.week===week);
-  const allRecs=history.filter(r=>r.personId===personId&&!r.noOcc&&r.score?.total!=null);
-
-  // Calc scores
-  let avgTotal=null,critAvg={};
-  if(weekRecs.length){
-    const sc=weekRecs[weekRecs.length-1].score;
-    if(sc?.total!=null){
-      avgTotal=Math.round(sc.total);
-      crit.forEach(c=>{if(sc.criteria[c.id]!=null)critAvg[c.id]=sc.criteria[c.id];});
-    }
-  } else if(allRecs.length){
-    const last=allRecs[0];
-    if(last.score?.total!=null){
-      avgTotal=Math.round(last.score.total);
-      crit.forEach(c=>{if(last.score.criteria[c.id]!=null)critAvg[c.id]=last.score.criteria[c.id];});
-    }
-  }
-
-  const strong=Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak=Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const positives=weekRecs.map(r=>r.positive).filter(Boolean).join('; ');
-  const negatives=weekRecs.map(r=>r.negative).filter(Boolean).join('; ');
-  const occText=weekOccs.map(o=>`[${o.type==='pos'?'positivo':'negativo'} - ${o.critLabel}]: ${o.text}`).join('\n');
-
-  // Context emojis based on scores
-  const contextEmojis=generateContextEmojis(critAvg,avgTotal);
-
-  document.getElementById('weeklyCardContent').innerHTML=`
-    <div class="card" style="margin-bottom:14px">
-      <div class="slabel" style="margin-bottom:10px">Card semanal · ${weekLabel(week)}</div>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        ${['all','strong','growth'].map(t=>`<div class="fpill${t==='all'?' active':''}" onclick="switchCardFocus('${personId}','${t}',this)" style="font-size:11px">${t==='all'?'Geral':t==='strong'?'✅ Pontos fortes':'🌱 Crescimento'}</div>`).join('')}
-      </div>
-    </div>
-    <div id="weeklyCardPreview">
-      <div class="ai-loading">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <div>Gerando resumo com IA...</div>
-      </div>
-    </div>`;
-
-  showSubPage('weekly-card',`${p.emoji} Card Semanal`);
-
-  // Call Claude API
-  await generateWeeklyCardAI(personId,'all',{p,avgTotal,critAvg,strong,weak,positives,negatives,occText,contextEmojis,week});
-}
-
-async function generateWeeklyCardAI(personId,focus,data){
-  const{p,avgTotal,critAvg,strong,weak,positives,negatives,occText,contextEmojis,week}=data;
-  const crit=getCriteria();
-
-  const focusInstruction=focus==='strong'
-    ?'Foque principalmente nos pontos fortes desta semana. Celebre os acertos com entusiasmo e calor humano.'
-    :focus==='growth'
-    ?'Foque nos pontos de crescimento e desenvolvimento. Seja encorajador e construtivo, sem ser duro.'
-    :'Faça um resumo equilibrado e humano da semana, cobrindo tanto os pontos fortes quanto os de desenvolvimento.';
-
-  const critDetails=Object.entries(critAvg).map(([k,v])=>{
-    const c=crit.find(x=>x.id===k);
-    return c?`${c.name}: ${Math.round(v)}/100`:'';
-  }).filter(Boolean).join(', ');
-
-  const prompt=`Você é um líder criativo que está gerando um card de feedback semanal para compartilhar com um membro da equipe chamado ${p.name} (${p.role}).
-
-DADOS DA SEMANA (${weekLabel(week)}):
-- Nota geral: ${avgTotal!=null?avgTotal+'/100':'sem nota registrada'}
-- Por critério: ${critDetails||'sem dados'}
-- Pontos fortes identificados: ${strong.join(', ')||'nenhum registrado'}
-- Áreas de atenção: ${weak.join(', ')||'nenhuma'}
-- Positivos registrados: ${positives||'nenhum'}
-- Negativos registrados: ${negatives||'nenhum'}
-- Ocorrências da semana: ${occText||'nenhuma'}
-
-INSTRUÇÃO: ${focusInstruction}
-
-Escreva um texto de feedback para ${p.name}. O texto deve:
-- Ter entre 120 e 180 palavras
-- Ser escrito em segunda pessoa (você)
-- Ser caloroso, humano e gostoso de ler — não uma lista, mas um texto fluido
-- Começar com algo positivo e específico sobre a semana
-- Mencionar pelo menos um ponto concreto dos dados
-- Terminar com uma frase de encorajamento ou reconhecimento
-- Soar como um líder que se importa, não como um relatório de RH
-
-Responda APENAS com o texto do card, sem título, sem aspas, sem explicações.`;
-
-  try{
-    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-goog-api-key':'AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
-    });
-    const json=await resp.json();
-    const text=json.candidates?.[0]?.content?.parts?.[0]?.text||'Não foi possível gerar o resumo.';
-    renderWeeklyCard(personId,focus,data,text);
-  }catch(e){
-    console.error(e);
-    renderWeeklyCard(personId,focus,data,'Erro ao conectar com a IA.');
-  }
-}
-
-function renderWeeklyCard(personId,focus,data,text){
-  const{p,avgTotal,contextEmojis,week}=data;
-  const col=avgTotal!=null?scoreColor(avgTotal):'var(--a1)';
-  document.getElementById('weeklyCardPreview').innerHTML=`
-    <div class="weekly-card-preview">
-      <div class="wc-emoji-row">
-        <div class="wc-main-emoji">${p.emoji}</div>
-        <div class="wc-context-emojis">${contextEmojis}</div>
-        ${avgTotal!=null?`<div class="wc-score-badge" style="color:${col};border-color:${col}33;background:${col}18">${avgTotal}</div>`:''}
-      </div>
-      <div class="wc-name">${p.name}</div>
-      <div class="wc-period">${weekLabel(week)}</div>
-      <div class="wc-text">${text}</div>
-    </div>
-    <button class="share-btn" onclick="shareWeeklyCard('${personId}',\`${text.replace(/`/g,"'")}\`)">
-      <span>↑</span> Compartilhar card
-    </button>
-    <button onclick="regenerateCard('${personId}')" style="width:100%;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;margin-top:8px">↻ Regenerar</button>`;
-}
-
-function generateContextEmojis(critAvg,total){
-  const emojis=[];
-  if(total>=80)emojis.push('🔥');
-  else if(total>=60)emojis.push('📈');
-  else emojis.push('💪');
-  if(critAvg['qt']>=80)emojis.push('🎨');
-  if(critAvg['p']>=80)emojis.push('⚡');
-  if(critAvg['c']>=80)emojis.push('🤝');
-  if(critAvg['s']>=80)emojis.push('💚');
-  if(critAvg['e']>=80)emojis.push('🌱');
-  while(emojis.length<5){
-    const opts=['✨','💡','🎯','🌟','🏆'];
-    emojis.push(opts[emojis.length%opts.length]);
-  }
-  return emojis.slice(0,5).join('');
-}
-
-async function switchCardFocus(personId,focus,el){
-  document.querySelectorAll('#weeklyCardContent .fpill').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('weeklyCardPreview').innerHTML=`<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><div>Regenerando...</div></div>`;
-  const profiles=getProfiles();const p=profiles.find(x=>x.id===personId);
-  const crit=getCriteria();const history=getHistory();const occs=getOccs();
-  const week=getWeekKey(new Date());
-  const weekRecs=history.filter(r=>r.personId===personId&&r.week===week&&!r.noOcc);
-  const weekOccs=occs.filter(o=>o.personId===personId&&o.week===week);
-  const allRecs=history.filter(r=>r.personId===personId&&!r.noOcc&&r.score?.total!=null);
-  let avgTotal=null,critAvg={};
-  const src=weekRecs.length?weekRecs[weekRecs.length-1]:allRecs[0];
-  if(src?.score?.total!=null){
-    avgTotal=Math.round(src.score.total);
-    crit.forEach(c=>{if(src.score.criteria[c.id]!=null)critAvg[c.id]=src.score.criteria[c.id];});
-  }
-  const strong=Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak=Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const positives=weekRecs.map(r=>r.positive).filter(Boolean).join('; ');
-  const negatives=weekRecs.map(r=>r.negative).filter(Boolean).join('; ');
-  const occText=weekOccs.map(o=>`[${o.type==='pos'?'positivo':'negativo'} - ${o.critLabel}]: ${o.text}`).join('\n');
-  const contextEmojis=generateContextEmojis(critAvg,avgTotal);
-  await generateWeeklyCardAI(personId,focus,{p,avgTotal,critAvg,strong,weak,positives,negatives,occText,contextEmojis,week});
-}
-
-async function regenerateCard(personId){
-  const el=document.querySelector('#weeklyCardContent .fpill.active');
-  if(el)el.click();
-  else await openWeeklyCard(personId);
-}
-
-async function shareWeeklyCard(personId,text){
-  const p=getProfiles().find(x=>x.id===personId);
-  const shareData={title:`Card Semanal · ${p?.name||''}`,text:text};
-  if(navigator.share){
-    try{await navigator.share(shareData);showToast('Compartilhado!');}
-    catch(e){if(e.name!=='AbortError')showToast('Erro ao compartilhar');}
-  } else {
-    await navigator.clipboard.writeText(text);showToast('Texto copiado!');
-  }
-}
-
 // ─── REPORT ───────────────────────────────────────────────
 function setupReportSelects(){
   const h=getHistory();const profiles=getProfiles();
@@ -1300,44 +1104,48 @@ function togglePeriodSelect(){
   document.getElementById('repQuarter').style.display=t==='quarterly'?'block':'none';
 }
 
-// ─── AI NARRATIVE REPORT ──────────────────────────────────
-async function generateNarrativeText(personName,role,avgTotal,critAvg,positives,negatives,periodLabel,crit){
-  const critDetails=Object.entries(critAvg).map(([k,v])=>{
-    const c=crit.find(x=>x.id===k);return c?`${c.name}: ${Math.round(v)}/100`:'';
-  }).filter(Boolean).join('; ');
-  const strong=Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak=Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+// ─── NARRATIVE REPORT (local) ────────────────────────────
+async function generateNarrativeText(personName, role, avgTotal, critAvg, positives, negatives, periodLabel, crit) {
+  const t = Math.round(avgTotal);
+  const strong = Object.entries(critAvg).filter(([,v])=>v>=75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const weak = Object.entries(critAvg).filter(([,v])=>v<60).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const mid = Object.entries(critAvg).filter(([,v])=>v>=60&&v<75).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
 
-  const prompt=`Você é um líder criativo gerando o resumo narrativo de um relatório interno de gestão de equipe. Escreva em terceira pessoa.
+  let txt = '';
 
-DADOS DE ${personName} (${role}) — ${periodLabel}:
-- Nota geral: ${Math.round(avgTotal)}/100
-- Por critério: ${critDetails}
-- Pontos fortes: ${strong.join(', ')||'não identificados'}
-- Áreas de atenção: ${weak.join(', ')||'nenhuma'}
-- Positivos registrados pelo gestor: ${positives||'nenhum'}
-- Negativos registrados pelo gestor: ${negatives||'nenhum'}
+  if(t >= 80) {
+    txt = `${personName} teve uma semana sólida — nota ${t}/100 que reflete consistência e comprometimento com o trabalho. `;
+  } else if(t >= 60) {
+    txt = `${personName} entregou uma semana razoável, com nota ${t}/100. Há espaço para crescimento, mas a base está lá. `;
+  } else {
+    txt = `Foi uma semana desafiadora para ${personName}, com nota ${t}/100. Vale uma conversa direta sobre o que está acontecendo. `;
+  }
 
-Escreva um parágrafo narrativo de 150 a 220 palavras sobre ${personName} neste período. O texto deve:
-- Ser fluido, humano e gostoso de ler
-- Mencionar dados concretos mas de forma natural, não como lista
-- Destacar o que foi bem antes de mencionar o que precisa melhorar
-- Contextualizar os números — explicar o que eles significam na prática
-- Ter tom de um gestor que conhece bem a pessoa e se importa com o desenvolvimento dela
-- Terminar com uma perspectiva ou observação sobre o próximo período
+  if(strong.length) {
+    txt += `O que chamou atenção positivamente foi ${strong.join(' e ')} — ${strong.length > 1 ? 'áreas onde a performance esteve acima do esperado' : 'área onde a performance esteve acima do esperado'}. `;
+  }
 
-Responda APENAS com o texto, sem título, sem aspas.`;
+  if(mid.length) {
+    txt += `${mid.join(' e ')} ${mid.length > 1 ? 'estão' : 'está'} em desenvolvimento — não é um problema, mas merece acompanhamento próximo nas próximas semanas. `;
+  }
 
-  try{
-    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-goog-api-key':'AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
-    });
-    const json=await resp.json();
-    return json.candidates?.[0]?.content?.parts?.[0]?.text||'';
-  }catch(e){console.error(e);return'';}
+  if(weak.length) {
+    txt += `O ponto que precisa de atenção é ${weak.join(' e ')} — ${weak.length > 1 ? 'áreas' : 'área'} com indicadores abaixo do esperado que ${weak.length > 1 ? 'merecem' : 'merece'} uma conversa direta. `;
+  }
+
+  if(positives) {
+    txt += `Vale destacar: ${positives}. `;
+  }
+
+  if(negatives) {
+    txt += `Para ficar de olho: ${negatives}. `;
+  }
+
+  txt += `O acompanhamento contínuo semana a semana é o que vai construir o histórico e tornar as conversas de desenvolvimento mais precisas e justas.`;
+
+  return txt;
 }
+
 
 async function generateReport(){
   const type=document.getElementById('repType').value;
