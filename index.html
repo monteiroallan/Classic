@@ -1189,17 +1189,13 @@ Escreva um texto de feedback para ${p.name}. O texto deve:
 Responda APENAS com o texto do card, sem título, sem aspas, sem explicações.`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        messages:[{role:'user',content:prompt}]
-      })
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
     });
     const json=await resp.json();
-    const text=json.content?.map(x=>x.text||'').join('')||'Não foi possível gerar o resumo.';
+    const text=json.candidates?.[0]?.content?.parts?.[0]?.text||'Não foi possível gerar o resumo.';
     renderWeeklyCard(personId,focus,data,text);
   }catch(e){
     renderWeeklyCard(personId,focus,data,'Erro ao conectar com a IA. Verifique sua conexão.');
@@ -1332,13 +1328,13 @@ Escreva um parágrafo narrativo de 150 a 220 palavras sobre ${personName} neste 
 Responda APENAS com o texto, sem título, sem aspas.`;
 
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
     });
     const json=await resp.json();
-    return json.content?.map(x=>x.text||'').join('')||'';
+    return json.candidates?.[0]?.content?.parts?.[0]?.text||'';
   }catch(e){return'';}
 }
 
@@ -1420,7 +1416,7 @@ async function generateReport(){
       <div class="rp-score-row"><span class="rp-score-big" style="color:${scoreColor(avgTotal)}">${Math.round(avgTotal)}</span><span class="rp-score-meta">/ 100 · ${recs.length} avaliação${recs.length>1?'ões':''}</span></div>
       ${barsHtml}
       <div class="chart-wrap"><div class="chart-label">Evolução</div><canvas id="${chartId}" height="110"></canvas></div>
-      ${narrativeText?`<div class="narrative-card"><div class="nc-title">Resumo do período</div><div class="nc-text">${narrativeText}</div></div>`:''}
+      <div class="narrative-card" id="narr-${personId}"><div class="nc-title">Resumo do período</div><div class="nc-text">${narrativeText||'<span style="color:var(--muted);font-style:italic">Gerando resumo com IA...</span>'}</div></div>
       ${critHtml}
       ${positives?`<div class="narrative-card" style="border-color:rgba(0,226,183,0.3)"><div class="nc-title" style="color:var(--a4)">✅ Pontos positivos</div><div class="nc-text" style="font-size:13px">${positives}</div></div>`:''}
       ${negatives?`<div class="narrative-card" style="border-color:rgba(255,68,102,0.3)"><div class="nc-title" style="color:#ff4466">⚠️ Pontos negativos</div><div class="nc-text" style="font-size:13px">${negatives}</div></div>`:''}
@@ -1638,22 +1634,8 @@ function handleImport(e){
   reader.readAsText(file);
 }
 
-// ─── AUTH ─────────────────────────────────────────────────
-function authAction(callback){
-  if(window.PublicKeyCredential&&typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable==='function'){
-    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(available=>{
-      if(available){
-        navigator.credentials.get({
-          publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rpId:window.location.hostname||'localhost',userVerification:'preferred',timeout:30000}
-        }).then(()=>callback()).catch(()=>{if(confirm('Confirmar para continuar?'))callback();});
-      } else {
-        if(confirm('Confirmar para continuar?'))callback();
-      }
-    });
-  } else {
-    if(confirm('Confirmar para continuar?'))callback();
-  }
-}
+// ─── AUTH (removido - ação direta) ───────────────────────
+function authAction(callback){callback();}
 
 // ─── MODALS ───────────────────────────────────────────────
 const openModal=id=>document.getElementById(id).classList.add('open');
