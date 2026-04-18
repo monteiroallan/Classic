@@ -1189,7 +1189,7 @@ Escreva um texto de feedback para ${p.name}. O texto deve:
 Responda APENAS com o texto do card, sem título, sem aspas, sem explicações.`;
 
   try{
-    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
+    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
@@ -1329,7 +1329,7 @@ Escreva um parágrafo narrativo de 150 a 220 palavras sobre ${personName} neste 
 Responda APENAS com o texto, sem título, sem aspas.`;
 
   try{
-    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
+    const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyDtW8jLVF2YA2GNFuZR9SiQnuMvQoY23Cg',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
