@@ -493,48 +493,50 @@ const DB={
 };
 
 // ─── DEFAULTS ─────────────────────────────────────────────
+// block: 'perf' = Performance (objetivo), 'behav' = Comportamento (subjetivo)
 const DEFAULT_CRITERIA=[
-  {id:'qt',name:'Qualidade Técnica',color:'#00ABFB',weight:30,questions:[
+  {id:'qt',name:'Qualidade Técnica',color:'#00ABFB',weight:30,block:'perf',questions:[
     {id:'qt1',label:'Acabamento',text:'Nível de acabamento geral das peças?',obj:'Padrão técnico geral',type:'scale',weight:20},
     {id:'qt2',label:'Marcas',text:'Aplicação correta de marcas e patrocinadores?',obj:'Erro mais crítico',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:0},weight:40},
     {id:'qt3',label:'Legibilidade',text:'Informações essenciais legíveis e hierarquizadas?',obj:'A peça comunica',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:25},
     {id:'qt4',label:'Arquivos',text:'Arquivos organizados e nomeados corretamente?',obj:'Fluxo coletivo',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:10},
-    {id:'qt5',label:'Inovação',text:'Ao criar fora do KV, arriscou ou ficou no seguro?',obj:'Segurança criativa',type:'multi',opts:['Arriscou','Ficou no seguro','Não houve'],values:{Arriscou:100,'Ficou no seguro':50,'Não houve':75},weight:5}
+    {id:'qt5',label:'Inovação',text:'Ao criar fora do KV, arriscou criativamente ou manteve o padrão?',obj:'Segurança criativa',type:'multi',opts:['Arriscou','Manteve o padrão','Não se aplicou'],values:{Arriscou:100,'Manteve o padrão':50},weight:5}
   ]},
-  {id:'p',name:'Prazo',color:'#7515FF',weight:30,questions:[
+  {id:'p',name:'Prazo',color:'#7515FF',weight:30,block:'perf',questions:[
     {id:'p1',label:'Pontualidade',text:'Entregas vieram no prazo combinado?',obj:'Confiabilidade',type:'multi',opts:['Sempre','Na maioria','Raramente'],values:{Sempre:100,'Na maioria':60,Raramente:20},weight:35},
-    {id:'p2',label:'Transparência',text:'Quando houve atraso, avisou antes do prazo estourar?',obj:'Responsabilidade',type:'multi',opts:['Sim','Não','Não houve atraso'],values:{Sim:100,Não:0,'Não houve atraso':75},weight:20},
-    {id:'p3',label:'Impacto',text:'O atraso impactou o fluxo de marketing?',obj:'Consequência real',type:'multi',opts:['Sim','Não','Não houve atraso'],values:{Sim:0,Não:100,'Não houve atraso':75},weight:25},
+    {id:'p2',label:'Transparência',text:'Quando houve atraso, avisou antes do prazo estourar?',obj:'Responsabilidade',type:'multi',opts:['Sim','Não','Não se aplicou'],values:{Sim:100,Não:0},weight:20},
+    {id:'p3',label:'Impacto',text:'O atraso gerou impacto no fluxo de marketing?',obj:'Consequência real',type:'multi',opts:['Sim','Não','Não se aplicou'],values:{Sim:0,Não:100},weight:25},
     {id:'p4',label:'Autonomia',text:'Se organizou de forma autônoma ou precisou de cobrança?',obj:'Maturidade',type:'binary',opts:['Autônoma','Precisou de cobrança'],values:{Autônoma:100,'Precisou de cobrança':30},weight:15},
-    {id:'p5',label:'Autoanálise',text:'Sugeriu novo prazo baseado na própria análise?',obj:'Autoconsciência',type:'multi',opts:['Sim','Não','Não foi necessário'],values:{Sim:100,Não:30,'Não foi necessário':75},weight:5}
+    {id:'p5',label:'Autoanálise',text:'Sugeriu ajuste de prazo baseado na própria análise de carga?',obj:'Autoconsciência',type:'multi',opts:['Sim','Não','Não se aplicou'],values:{Sim:100,Não:30},weight:5}
   ]},
-  {id:'c',name:'Comunicação',color:'#BC4AFF',weight:20,questions:[
-    {id:'c1',label:'Dependência',text:'Quantas vezes fui acionado essa semana?',obj:'Evolução da autonomia',type:'multi',opts:['0','1 – 2','3 ou mais'],values:{'0':100,'1 – 2':60,'3 ou mais':20},weight:10},
-    {id:'c2',label:'Autonomia Rel.',text:'Resolveu diretamente com outras equipes?',obj:'Autonomia relacional',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:15},
-    {id:'c3',label:'Maturidade',text:'Trouxe dúvidas com contexto ou só jogou o problema?',obj:'Maturidade comunicativa',type:'multi',opts:['Com contexto','Só o problema','Não houve dúvida'],values:{'Com contexto':100,'Só o problema':20,'Não houve dúvida':75},weight:20},
-    {id:'c4',label:'Pauta',text:'Respeitou a pauta sem alterar ou ignorar?',obj:'Fluxo acordado',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:25},
-    {id:'c5',label:'Responsab.',text:'Quando algo deu errado, assumiu ou jogou a culpa?',obj:'Maturidade emocional',type:'multi',opts:['Assumiu','Direcionou','Não houve'],values:{Assumiu:100,Direcionou:0,'Não houve':75},weight:30}
+  {id:'c',name:'Comunicação',color:'#BC4AFF',weight:20,block:'behav',questions:[
+    {id:'c1',label:'Dependência',text:'Quantas vezes precisou me acionar essa semana?',obj:'Evolução da autonomia',type:'multi',opts:['Nenhuma','1 a 2 vezes','3 ou mais'],values:{Nenhuma:100,'1 a 2 vezes':60,'3 ou mais':20},weight:10},
+    {id:'c2',label:'Autonomia Rel.',text:'Resolveu situações diretamente com outras equipes?',obj:'Autonomia relacional',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:15},
+    {id:'c3',label:'Contexto',text:'Quando trouxe dúvidas, veio com contexto ou só com o problema?',obj:'Maturidade comunicativa',type:'multi',opts:['Com contexto','Só o problema','Não se aplicou'],values:{'Com contexto':100,'Só o problema':20},weight:20},
+    {id:'c4',label:'Pauta',text:'Respeitou a pauta sem alterar ou ignorar itens?',obj:'Fluxo acordado',type:'multi',opts:['Sim','Parcialmente','Não'],values:{Sim:100,Parcialmente:50,Não:0},weight:25},
+    {id:'c5',label:'Responsab.',text:'Quando algo deu errado, assumiu ou direcionou a responsabilidade?',obj:'Maturidade emocional',type:'multi',opts:['Assumiu','Direcionou responsabilidade','Não se aplicou'],values:{Assumiu:100,'Direcionou responsabilidade':0},weight:30}
   ]},
-  {id:'s',name:'Saúde no Trabalho',color:'#00E2B7',weight:10,questions:[
-    {id:'s1',label:'Reatividade',text:'Demonstrou reatividade emocional aos pedidos?',obj:'Sinal de sobrecarga',type:'binary',opts:['Sim','Não'],values:{Sim:0,Não:100},weight:25},
-    {id:'s2',label:'Presença',text:'Esteve presente nas interações ou se fechou?',obj:'Conexão com a equipe',type:'binary',opts:['Presente','Fechado'],values:{Presente:100,Fechado:0},weight:30},
-    {id:'s3',label:'Entrega',text:'Entregou peças em massa ou de forma distribuída?',obj:'Sinal de desprezo',type:'binary',opts:['Em massa','Distribuída'],values:{'Em massa':20,Distribuída:100},weight:10},
-    {id:'s4',label:'Engajamento',text:'Trouxe sugestão criativa espontânea?',obj:'Saúde criativa',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:30},weight:15},
+  {id:'s',name:'Saúde no Trabalho',color:'#00E2B7',weight:10,block:'behav',questions:[
+    {id:'s1',label:'Reatividade',text:'Demonstrou reatividade emocional diante dos pedidos?',obj:'Sinal de sobrecarga',type:'binary',opts:['Sim','Não'],values:{Sim:0,Não:100},weight:25},
+    {id:'s2',label:'Presença',text:'Esteve presente e engajado nas interações?',obj:'Conexão com a equipe',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:0},weight:30},
+    {id:'s3',label:'Ritmo de entrega',text:'As peças foram entregues de forma distribuída ao longo da semana?',obj:'Organização e ritmo',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:20},weight:10},
+    {id:'s4',label:'Engajamento',text:'Trouxe sugestão criativa ou melhoria de forma espontânea?',obj:'Saúde criativa',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:30},weight:15},
     {id:'s5',label:'Leveza',text:'Houve leveza e interação natural com a equipe?',obj:'Bem-estar relacional',type:'binary',opts:['Sim','Não'],values:{Sim:100,Não:0},weight:20}
   ]},
-  {id:'e',name:'Evolução',color:'#C7F7FF',weight:10,questions:[
-    {id:'e1',label:'Autotrato',text:'Quando errou, como se tratou?',obj:'Autotrato diante do erro',type:'multi',opts:['Construtiva','Se destruiu','Não houve erro'],values:{Construtiva:100,'Se destruiu':0,'Não houve erro':75},weight:30},
-    {id:'e2',label:'Limites',text:'Impôs limites quando sobrecarregada ou engoliu tudo?',obj:'Autocuidado',type:'multi',opts:['Impôs limites','Engoliu','Não houve sobrecarga'],values:{'Impôs limites':100,Engoliu:0,'Não houve sobrecarga':75},weight:25},
-    {id:'e3',label:'Humildade',text:'Pediu ajuda quando precisou ou fingiu que sabia?',obj:'Segurança psicológica',type:'multi',opts:['Pediu ajuda','Fingiu','Não houve'],values:{'Pediu ajuda':100,Fingiu:0,'Não houve':75},weight:15},
-    {id:'e4',label:'Autoestima',text:'Celebrou quando acertou ou passou em branco?',obj:'Reconhecimento próprio',type:'binary',opts:['Celebrou','Passou em branco'],values:{Celebrou:100,'Passou em branco':30},weight:10},
-    {id:'e5',label:'Ritmo',text:'Respeitou o próprio ritmo ou se martirizou?',obj:'Relação com tempo e limite',type:'binary',opts:['Respeitou','Se martirizou'],values:{Respeitou:100,'Se martirizou':0},weight:20}
+  {id:'e',name:'Evolução',color:'#C7F7FF',weight:10,block:'behav',questions:[
+    {id:'e1',label:'Autotrato',text:'Diante de um erro, como a pessoa reagiu?',obj:'Autotrato',type:'multi',opts:['De forma construtiva','Teve dificuldade em lidar','Não se aplicou'],values:{'De forma construtiva':100,'Teve dificuldade em lidar':0},weight:30},
+    {id:'e2',label:'Limites',text:'Quando sobrecarregada, comunicou o limite ou absorveu tudo?',obj:'Autocuidado',type:'multi',opts:['Comunicou o limite','Absorveu sem comunicar','Não se aplicou'],values:{'Comunicou o limite':100,'Absorveu sem comunicar':0},weight:25},
+    {id:'e3',label:'Humildade',text:'Pediu ajuda quando precisou ou tentou resolver sozinha sem sucesso?',obj:'Segurança psicológica',type:'multi',opts:['Pediu ajuda','Tentou sozinha sem comunicar','Não se aplicou'],values:{'Pediu ajuda':100,'Tentou sozinha sem comunicar':0},weight:15},
+    {id:'e4',label:'Autoestima',text:'Reconheceu os próprios acertos ou passou em branco?',obj:'Reconhecimento próprio',type:'binary',opts:['Reconheceu','Passou em branco'],values:{Reconheceu:100,'Passou em branco':30},weight:10},
+    {id:'e5',label:'Ritmo próprio',text:'Respeitou seu próprio ritmo ou teve dificuldade em lidar com a pressão?',obj:'Relação com tempo e limite',type:'binary',opts:['Respeitou','Teve dificuldade'],values:{Respeitou:100,'Teve dificuldade':0},weight:20}
   ]}
 ];
 
 const DEFAULT_PROFILES=[
   {id:'mateus',name:'Mateus',role:'Design / Arquitetura',emoji:'🎨',feedbacks:[]},
   {id:'deli',  name:'Deli',  role:'Design de Informação',emoji:'✨',feedbacks:[]},
-  {id:'marlon',name:'Marlon',role:'Vídeo / Captação',    emoji:'🎬',feedbacks:[]}
+  {id:'marlon',name:'Marlon',role:'Vídeo / Captação',    emoji:'🎬',feedbacks:[]},
+  {id:'allan', name:'Allan', role:'Direção de Criação',  emoji:'🖊️',feedbacks:[]}
 ];
 
 const getCriteria=()=>DB.get('criteria')||DEFAULT_CRITERIA;
@@ -576,7 +578,9 @@ const monthLabel=k=>{const[y,m]=k.split('-M');return['Jan','Fev','Mar','Abr','Ma
 const quarterLabel=k=>{const[y,q]=k.split('-');return`${q} de ${y}`};
 const shortDate=iso=>new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
 const fullDate=iso=>new Date(iso).toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
-const scoreColor=s=>s>=70?'#00E2B7':s>=50?'#00ABFB':s>=30?'#BC4AFF':'#ff4466';
+const scoreColor=s=>s>=80?'#00E2B7':s>=60?'#00ABFB':s>=40?'#BC4AFF':'#ff4466';
+const scoreBand=s=>s>=80?'Alto desempenho':s>=60?'Bom desempenho':s>=40?'Atenção':'Risco';
+const scoreBandSub=s=>s>=80?'Autonomia plena':s>=60?'Ajustes pontuais':s>=40?'Pontos críticos':'Necessita intervenção';
 
 // ─── TABS ─────────────────────────────────────────────────
 function showTab(tab,el){
@@ -697,11 +701,14 @@ function selScale(gid,qId,val){
 function calcScore(ans){
   const crit=getCriteria();
   if(!ans||!Object.keys(ans).length)return null;
+  const NA_VALUES=['Não se aplicou','Não se aplicou','n/a'];
   const cr={};
   crit.forEach(c=>{
     let ws=0,wt=0;
     c.questions.forEach(q=>{
       const v=ans[q.id];if(v==null)return;
+      // Ignorar respostas não aplicáveis
+      if(typeof v==='string'&&v.toLowerCase().includes('não se aplic'))return;
       let s=null;
       if(q.type==='scale')s={1:0,2:25,3:50,4:75,5:100}[v]??null;
       else s=q.values?.[v]??null;
@@ -710,12 +717,28 @@ function calcScore(ans){
     });
     cr[c.id]=wt>0?ws/wt:null;
   });
+  // Score por bloco
+  const perfCrits=crit.filter(c=>c.block==='perf');
+  const behavCrits=crit.filter(c=>c.block==='behav');
+  const blockScore=(crits)=>{
+    let tot=0,totW=0;
+    crits.forEach(c=>{
+      if(cr[c.id]==null)return;
+      tot+=cr[c.id]*(c.weight/100);totW+=(c.weight/100);
+    });
+    return totW>0?tot/totW*(totW/crits.reduce((a,c)=>a+c.weight/100,0)):null;
+  };
   let tot=0,totW=0;
   crit.forEach(c=>{
     if(cr[c.id]==null)return;
     tot+=cr[c.id]*(c.weight/100);totW+=(c.weight/100);
   });
-  return{criteria:cr,total:totW>0?tot/totW*(totW):null};
+  return{
+    criteria:cr,
+    total:totW>0?tot/totW*(totW):null,
+    perf:blockScore(perfCrits),
+    behav:blockScore(behavCrits)
+  };
 }
 
 // ─── SAVE EVAL ────────────────────────────────────────────
@@ -845,10 +868,20 @@ function renderHistory(){
     </div>`;
     const sc=r.score;const tot=sc?.total!=null?Math.round(sc.total):'–';
     const col=sc?.total!=null?scoreColor(sc.total):'var(--muted)';
+    const band=sc?.total!=null?scoreBand(sc.total):'';
+    const perfVal=sc?.perf!=null?Math.round(sc.perf):null;
+    const behavVal=sc?.behav!=null?Math.round(sc.behav):null;
     const crits=sc?.criteria?crit.map(c=>sc.criteria[c.id]!=null?`<span class="hcard-crit" style="color:${c.color}">${c.name.split(' ')[0]} ${Math.round(sc.criteria[c.id])}</span>`:'').join(''):'';
     return`<div class="hcard">
       <div class="hcard-top"><div class="hcard-info"><span class="hcard-person">${p.emoji} ${p.name}</span><span class="hcard-date">${fullDate(r.date)}</span></div>${actions}</div>
-      <div class="hcard-score"><span class="sc-num" style="color:${col}">${tot}</span><span class="sc-label">/ 100</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div class="hcard-score" style="margin-bottom:0"><span class="sc-num" style="color:${col}">${tot}</span><span class="sc-label">/ 100</span></div>
+        ${band?`<span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:${col};background:${col}18;border:1px solid ${col}33;border-radius:6px;padding:3px 8px">${band}</span>`:''}
+      </div>
+      ${perfVal!=null||behavVal!=null?`<div style="display:flex;gap:8px;margin-bottom:8px">
+        ${perfVal!=null?`<div style="flex:1;background:var(--s2);border-radius:8px;padding:8px 10px"><div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Performance</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${scoreColor(perfVal)}">${perfVal}</div></div>`:''}
+        ${behavVal!=null?`<div style="flex:1;background:var(--s2);border-radius:8px;padding:8px 10px"><div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Comportamento</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${scoreColor(behavVal)}">${behavVal}</div></div>`:''}
+      </div>`:''}
       <div class="hcard-criteria">${crits}</div>
       ${r.positive?`<div class="hcard-field"><strong>✅</strong>${r.positive}</div>`:''}
       ${r.negative?`<div class="hcard-field"><strong>⚠️</strong>${r.negative}</div>`:''}
@@ -1107,45 +1140,46 @@ function togglePeriodSelect(){
 // ─── NARRATIVE REPORT (local) ────────────────────────────
 async function generateNarrativeText(personName, role, avgTotal, critAvg, positives, negatives, periodLabel, crit) {
   const t = Math.round(avgTotal);
-  const strong = Object.entries(critAvg).filter(([,v])=>v>=70).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const weak = Object.entries(critAvg).filter(([,v])=>v<30).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
-  const mid = Object.entries(critAvg).filter(([,v])=>v>=30&&v<70).map(([k])=>crit.find(c=>c.id===k)?.name).filter(Boolean);
+  const strong = Object.entries(critAvg).filter(([,v])=>v>=80).map(([k])=>({name:crit.find(c=>c.id===k)?.name,score:Math.round(v)})).filter(x=>x.name);
+  const weak = Object.entries(critAvg).filter(([,v])=>v<40).map(([k])=>({name:crit.find(c=>c.id===k)?.name,score:Math.round(v)})).filter(x=>x.name);
+  const mid = Object.entries(critAvg).filter(([,v])=>v>=40&&v<80).map(([k])=>({name:crit.find(c=>c.id===k)?.name,score:Math.round(v)})).filter(x=>x.name);
 
-  let txt = '';
+  let parts = [];
 
-  if(t >= 70) {
-    txt = `${personName} teve uma semana muito boa — nota ${t}/100, o que já é excelente dentro da régua de avaliação. Consistência e comprometimento ficaram evidentes nas entregas. `;
-  } else if(t >= 50) {
-    txt = `${personName} teve uma semana em desenvolvimento, com nota ${t}/100. Está no caminho certo — há espaço para crescer, mas a base está sendo construída. `;
-  } else if(t >= 30) {
-    txt = `${personName} ficou abaixo do esperado esta semana, com nota ${t}/100. Alguns pontos merecem atenção e acompanhamento mais próximo nas próximas semanas. `;
+  // Abertura direta com nota e contexto
+  if(t >= 80) {
+    parts.push(`${personName} teve uma semana de alto desempenho — ${t}/100. ${scoreBandSub(t)}.`);
+  } else if(t >= 60) {
+    parts.push(`${personName} fechou a semana com bom desempenho — ${t}/100. Está no caminho certo, com ajustes pontuais a fazer.`);
+  } else if(t >= 40) {
+    parts.push(`${personName} fechou a semana em ${t}/100 — zona de atenção. Há pontos críticos que merecem acompanhamento próximo.`);
   } else {
-    txt = `Foi uma semana crítica para ${personName}, com nota ${t}/100. Isso indica a necessidade de uma conversa direta e cuidadosa sobre o que está acontecendo. `;
+    parts.push(`${personName} marcou ${t}/100 — zona de risco. Isso pede uma conversa direta, cuidadosa e sem rodeios.`);
   }
 
+  // Pontos fortes com especificidade
   if(strong.length) {
-    txt += `O que chamou atenção positivamente foi ${strong.join(' e ')} — ${strong.length > 1 ? 'áreas onde a performance esteve acima do esperado' : 'área onde a performance esteve acima do esperado'}. `;
+    const items = strong.map(x=>`${x.name} (${x.score}`+`)`).join(', ');
+    parts.push(`O que funcionou bem: ${items}. ${strong.length > 1 ? 'Essas áreas merecem reconhecimento.' : 'Essa área merece reconhecimento.'}`);
   }
 
-  if(mid.length) {
-    txt += `${mid.join(' e ')} ${mid.length > 1 ? 'estão' : 'está'} em desenvolvimento — não é um problema, mas merece acompanhamento próximo nas próximas semanas. `;
+  // Pontos em desenvolvimento — sem drama
+  if(mid.length && t >= 50) {
+    const lowest = mid.sort((a,b)=>a.score-b.score)[0];
+    parts.push(`O ponto que mais merece atenção dentro do que está em desenvolvimento é ${lowest.name} (${lowest.score}). Não é urgente, mas é o que tem mais margem para evoluir.`);
   }
 
+  // Pontos críticos — direto
   if(weak.length) {
-    txt += `O ponto que precisa de atenção é ${weak.join(' e ')} — ${weak.length > 1 ? 'áreas' : 'área'} com indicadores abaixo do esperado que ${weak.length > 1 ? 'merecem' : 'merece'} uma conversa direta. `;
+    const items = weak.map(x=>`${x.name} (${x.score})`).join(' e ');
+    parts.push(`${items} ${weak.length > 1 ? 'estão' : 'está'} em zona crítica. ${weak.length > 1 ? 'Essas são' : 'Essa é'} a conversa que não pode esperar.`);
   }
 
-  if(positives) {
-    txt += `Vale destacar: ${positives}. `;
-  }
+  // Observações do gestor
+  if(positives) parts.push(`Registrado como positivo: ${positives}.`);
+  if(negatives) parts.push(`Registrado como negativo: ${negatives}.`);
 
-  if(negatives) {
-    txt += `Para ficar de olho: ${negatives}. `;
-  }
-
-  txt += `O acompanhamento contínuo semana a semana é o que vai construir o histórico e tornar as conversas de desenvolvimento mais precisas e justas.`;
-
-  return txt;
+  return parts.join(' ');
 }
 
 
@@ -1187,8 +1221,23 @@ async function generateReport(){
     // Generate AI narrative
     const narrativeText=await generateNarrativeText(p.name,p.role,avgTotal,critAvg,positives,negatives,periodLbl,crit);
 
+    const perfAvg=recs.map(r=>r.score.perf).filter(v=>v!=null).reduce((a,b,_,arr)=>a+b/arr.length,0)||null;
+    const behavAvg=recs.map(r=>r.score.behav).filter(v=>v!=null).reduce((a,b,_,arr)=>a+b/arr.length,0)||null;
+    const band=scoreBand(avgTotal);
+    const bandSub=scoreBandSub(avgTotal);
+
     let barsHtml='<div class="rp-bars">';
-    crit.forEach(c=>{
+    // Separar por bloco
+    const perfCrits=crit.filter(c=>c.block==='perf');
+    const behavCrits=crit.filter(c=>c.block==='behav');
+    barsHtml+=`<div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Performance</div>`;
+    perfCrits.forEach(c=>{
+      if(critAvg[c.id]==null)return;
+      const v=Math.round(critAvg[c.id]);
+      barsHtml+=`<div class="rp-bar-row"><span class="rp-bar-name">${c.name}</span><div class="rp-bar-track"><div class="rp-bar-fill" style="width:${v}%;background:${c.color}"></div></div><span class="rp-bar-val" style="color:${c.color}">${v}</span></div>`;
+    });
+    barsHtml+=`<div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:10px 0 6px">Comportamento</div>`;
+    behavCrits.forEach(c=>{
       if(critAvg[c.id]==null)return;
       const v=Math.round(critAvg[c.id]);
       barsHtml+=`<div class="rp-bar-row"><span class="rp-bar-name">${c.name}</span><div class="rp-bar-track"><div class="rp-bar-fill" style="width:${v}%;background:${c.color}"></div></div><span class="rp-bar-val" style="color:${c.color}">${v}</span></div>`;
@@ -1200,10 +1249,10 @@ async function generateReport(){
       if(critAvg[c.id]==null)return;
       const v=Math.round(critAvg[c.id]);
       const s=v;
-      const text=s>=70?`${p.name} está indo muito bem aqui — ponto forte que merece reconhecimento.`
-        :s>=50?`Em desenvolvimento, no caminho certo. Nada que preocupe, mas vale continuar de olho.`
-        :s>=30?`Abaixo do esperado. Merece acompanhamento mais próximo nas próximas semanas.`
-        :`Ponto crítico. Os indicadores aqui pedem uma conversa direta e atenção imediata.`;
+      const text=s>=80?`${p.name} está indo muito bem aqui — ponto forte que merece reconhecimento.`
+        :s>=60?`Bom desempenho. Nada que preocupe, segue em desenvolvimento.`
+        :s>=40?`Zona de atenção. Merece acompanhamento mais próximo nas próximas semanas.`
+        :`Ponto de risco. Os indicadores aqui pedem uma conversa direta e atenção imediata.`;
       critHtml+=`<div class="crit-detail-card" style="border-color:${c.color}">
         <div class="crit-detail-header"><span class="crit-detail-name" style="color:${c.color}">${c.name}</span><span class="crit-detail-score" style="color:${c.color}">${v}/100</span></div>
         <div class="crit-detail-text">${text}</div>
@@ -1214,19 +1263,24 @@ async function generateReport(){
     const sugs=[];
     crit.forEach(c=>{
       const v=critAvg[c.id];if(v==null)return;
-      if(v<30)sugs.push(`${c.name} está em zona crítica (${Math.round(v)}/100) — uma conversa direta e cuidadosa é necessária.`);
-      else if(v<50)sugs.push(`${c.name} abaixo do esperado (${Math.round(v)}/100). Acompanhamento próximo nas próximas semanas.`);
-      else if(v<70)sugs.push(`${c.name} em desenvolvimento (${Math.round(v)}/100). No caminho certo, continue acompanhando.`);
+      if(v<40)sugs.push(`${c.name} está em zona de risco (${Math.round(v)}/100) — conversa direta necessária.`);
+      else if(v<60)sugs.push(`${c.name} em atenção (${Math.round(v)}/100). Acompanhamento próximo nas próximas semanas.`);
+      else if(v<80)sugs.push(`${c.name} em bom desempenho (${Math.round(v)}/100). Continue acompanhando.`);
     });
     if(!sugs.length)sugs.push(`${p.name} está com boa performance geral. Mantenha o acompanhamento e continue estimulando a autonomia e inovação.`);
 
     const chartId=`chart-${personId}-${Date.now()}`;
     html+=`<div class="rp-person-block">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <span style="font-size:32px">${p.emoji}</span>
         <div><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">${p.name}</div><div style="font-size:12px;color:var(--muted)">${p.role}</div></div>
       </div>
-      <div class="rp-score-row"><span class="rp-score-big" style="color:${scoreColor(avgTotal)}">${Math.round(avgTotal)}</span><span class="rp-score-meta">/ 100 · ${recs.length} avaliação${recs.length>1?'ões':''}</span></div>
+      <div class="rp-score-row"><span class="rp-score-big" style="color:${scoreColor(avgTotal)}">${Math.round(avgTotal)}</span><span class="rp-score-meta">/ 100 · ${recs.length} avaliação${recs.length>1?'ões':''}</span><span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:${scoreColor(avgTotal)};background:${scoreColor(avgTotal)}18;border:1px solid ${scoreColor(avgTotal)}33;border-radius:6px;padding:3px 8px;margin-left:4px">${band}</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'Syne',sans-serif">${bandSub}</div>
+      ${perfAvg!=null||behavAvg!=null?`<div style="display:flex;gap:8px;margin-bottom:14px">
+        ${perfAvg!=null?`<div style="flex:1;background:var(--s2);border-radius:10px;padding:12px"><div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Performance</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:${scoreColor(perfAvg)}">${Math.round(perfAvg)}</div><div style="font-size:10px;color:var(--muted)">${scoreBand(perfAvg)}</div></div>`:''}
+        ${behavAvg!=null?`<div style="flex:1;background:var(--s2);border-radius:10px;padding:12px"><div style="font-family:'Syne',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Comportamento</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:${scoreColor(behavAvg)}">${Math.round(behavAvg)}</div><div style="font-size:10px;color:var(--muted)">${scoreBand(behavAvg)}</div></div>`:''}
+      </div>`:''}
       ${barsHtml}
       <div class="chart-wrap"><div class="chart-label">Evolução</div><canvas id="${chartId}" height="110"></canvas></div>
       <div class="narrative-card" id="narr-${personId}"><div class="nc-title">Resumo do período</div><div class="nc-text">${narrativeText||'<span style="color:var(--muted);font-style:italic">Gerando com IA...</span>'}</div></div>
